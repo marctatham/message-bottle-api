@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val versionKotlin: String by project
 val versionKtor: String by project
 val versionLogback: String by project
+val versionFirebaseAdmin: String by project
 val versionApp: String by project
 val uberJarFileName: String = "ktor-server-$versionApp-with-dependencies.jar"
 
@@ -48,6 +49,13 @@ dependencies {
 
     implementation("io.ktor:ktor-server-jetty:$versionKtor")
     implementation("ch.qos.logback:logback-classic:$versionLogback")
+
+    // issuing our own JWT tokens
+    implementation("io.ktor:ktor-auth:$versionKtor")
+    implementation("io.ktor:ktor-auth-jwt:$versionKtor")
+
+    // firebase admin to facilitate user authentication
+    implementation("com.google.firebase:firebase-admin:$versionFirebaseAdmin")
 
     testImplementation("io.ktor:ktor-server-tests:$versionKtor")
 }
