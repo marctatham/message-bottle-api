@@ -93,8 +93,15 @@ tasks {
         enabled = false
     }
 
+    //
+    val copyTask = register<Copy>("yaml") {
+        from("$rootDir/appengine/env_variables.yaml")
+        into("$buildDir/staged-app")
+    }
+
     // update the `assemble` task to ensure the creation of a brand new UberJar using the shadowJar task
     named("assemble") {
+        dependsOn(copyTask)
         dependsOn(shadowJarTask)
     }
 }

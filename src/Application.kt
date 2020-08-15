@@ -63,15 +63,26 @@ fun Application.module(testing: Boolean = false) {
     }
 
     routing {
+
         post("user") {
             userService.getCreateUser(call)
         }
 
-        // authenticate all calls
         authenticate {
+
             get("/") {
                 call.respondText("hello world", contentType = ContentType.Text.Plain)
             }
+
+            // requests to the "message" route are authenticated
+            post("/message") {
+                call.respondText("todo", contentType = ContentType.Text.Plain)
+            }
+
+            get("/message") {
+                call.respondText("todo", contentType = ContentType.Text.Plain)
+            }
+
         }
     }
 }
