@@ -2,15 +2,11 @@ package com.marctatham.service.user
 
 import com.marctatham.service.user.getcreate.GetCreateUserRequestMapper
 import com.marctatham.service.user.getcreate.GetCreateUserResponseMapper
+import com.marctatham.service.user.getcreate.GetCreateUserUseCase
 import io.ktor.application.ApplicationCall
 import io.ktor.request.receiveText
 import io.ktor.response.respond
-import com.marctatham.service.user.getcreate.GetCreateUserUseCase
 
-
-/**
- * the request object that comes in
- */
 class UserService(
     private val requestMapper: GetCreateUserRequestMapper,
     private val responseMapper: GetCreateUserResponseMapper,
