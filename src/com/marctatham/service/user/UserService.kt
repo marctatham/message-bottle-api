@@ -1,11 +1,11 @@
-package com.marctatham.usecases
+package com.marctatham.service.user
 
 import com.marctatham.service.user.getcreate.GetCreateUserRequestMapper
 import com.marctatham.service.user.getcreate.GetCreateUserResponseMapper
 import io.ktor.application.ApplicationCall
 import io.ktor.request.receiveText
 import io.ktor.response.respond
-import service.user.getcreate.GetCreateUserUseCase
+import com.marctatham.service.user.getcreate.GetCreateUserUseCase
 
 
 /**

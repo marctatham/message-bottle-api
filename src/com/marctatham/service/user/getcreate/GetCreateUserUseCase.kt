@@ -1,10 +1,8 @@
-package service.user.getcreate
+package com.marctatham.service.user.getcreate
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserRecord
 import com.marctatham.SimpleJWT
-import com.marctatham.service.user.getcreate.GetCreateUserSessionEntity
-import com.marctatham.service.user.getcreate.UserSessionEntity
 
 class GetCreateUserUseCase(
 

@@ -8,7 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.marctatham.service.user.getcreate.GetCreateUserRequestMapper
 import com.marctatham.service.user.getcreate.GetCreateUserResponseMapper
-import com.marctatham.usecases.UserService
+import com.marctatham.service.user.UserService
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -21,11 +21,17 @@ import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
-import service.user.getcreate.GetCreateUserUseCase
+import com.marctatham.service.user.getcreate.GetCreateUserUseCase
 import java.io.FileInputStream
 
 val configProvider = ConfigProvider()
-val simpleJwt: SimpleJWT = SimpleJWT(configProvider.getOrDefault("JWT_SECRET", "DEFAULT"))
+val simpleJwt: SimpleJWT =
+    SimpleJWT(
+        configProvider.getOrDefault(
+            "JWT_SECRET",
+            "DEFAULT"
+        )
+    )
 val gson: Gson = GsonBuilder()
     .setPrettyPrinting()
     .create()
@@ -64,15 +70,16 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
 
+        // just for testing that everything is up
+        get("/") {
+            call.respondText("hello world", contentType = ContentType.Text.Plain)
+        }
+
         post("user") {
             userService.getCreateUser(call)
         }
 
         authenticate {
-
-            get("/") {
-                call.respondText("hello world", contentType = ContentType.Text.Plain)
-            }
 
             // requests to the "message" route are authenticated
             post("/message") {
