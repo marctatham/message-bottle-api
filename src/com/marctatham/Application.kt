@@ -82,8 +82,9 @@ fun Application.module(testing: Boolean = false) {
     routing {
 
         // just for testing that everything is up
-        get("/") {
-            call.respondText("hello world", contentType = ContentType.Text.Plain)
+        get("/health-check") {
+            // todo: let's get this outputting the service version
+            call.respondText("healthy", contentType = ContentType.Text.Plain)
         }
 
         post("user") {
