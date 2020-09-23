@@ -27,7 +27,7 @@ apply {
 // where possible, plugins should be added via this section
 plugins {
     application
-    kotlin("jvm") version "1.3.70"
+    kotlin("jvm") version "1.4.10"
 
     // Shadow plugin - enable support for building our UberJar
     id("com.github.johnrengelman.shadow") version "5.2.0"
