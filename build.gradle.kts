@@ -93,7 +93,7 @@ tasks {
         enabled = false
     }
 
-    //
+    // ensure env_variables are copied into the staged app
     val copyTask = register<Copy>("yaml") {
         from("$rootDir/appengine/env_variables.yaml")
         into("$buildDir/staged-app")
