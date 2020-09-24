@@ -92,6 +92,7 @@ fun Application.module(testing: Boolean = false) {
         // just for testing that everything is up
         get("/health-check") {
             // todo: let's get this outputting the service version
+            logger.info("health-check")
             call.respondText("healthy", contentType = ContentType.Text.Plain)
         }
 
