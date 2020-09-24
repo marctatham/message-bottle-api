@@ -3,8 +3,7 @@
 runtime: java11
 instance_class: F1
 
-
 includes:
   # environment variables are stored separately from the repository
-  # for security purposes
+  # for security purposes, these should never be added to the gir repo
   - env_variables.yaml
