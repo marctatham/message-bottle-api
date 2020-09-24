@@ -1,7 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.google.cloud.tools.gradle.appengine.appyaml.AppEngineAppYamlExtension
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val versionKotlin: String by project
 val versionKtor: String by project
@@ -92,18 +90,6 @@ tasks {
     named("jar") {
         enabled = false
     }
-
-    // ensure env_variables are copied into the staged app
-    val copyTask = register<Copy>("yaml") {
-        from("$rootDir/appengine/env_variables.yaml")
-        into("$buildDir/staged-app")
-    }
-
-    // update the `assemble` task to ensure the creation of a brand new UberJar using the shadowJar task
-    named("assemble") {
-        dependsOn(copyTask)
-        dependsOn(shadowJarTask)
-    }
 }
 
 configure<AppEngineAppYamlExtension> {
@@ -114,6 +100,12 @@ configure<AppEngineAppYamlExtension> {
     stage {
         setAppEngineDirectory("appengine")          // where to find the app.yaml
         setArtifact("build/libs/$uberJarFileName")  // where to find the artifact to upload
+
+        val extraFiles = arrayOf(
+            "$rootDir/appengine-configuration",
+            "$rootDir/resources"
+        )
+        setExtraFilesDirectories(extraFiles)
     }
 
     deploy {
