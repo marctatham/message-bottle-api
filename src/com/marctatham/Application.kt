@@ -20,10 +20,14 @@ import io.ktor.response.*
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.File
 import java.io.FileInputStream
 
-val logger = LoggerFactory.getLogger(Application::class.java)
+private const val SERVICE_ACCOUNT = "bottling-messages-firebase-adminsdk.json"
+
+val logger: Logger = LoggerFactory.getLogger(Application::class.java)
 
 val configProvider = ConfigProvider()
 val simpleJwt: SimpleJWT =
@@ -38,14 +42,20 @@ val gson: Gson = GsonBuilder()
     .create()
 
 fun main(args: Array<String>) {
-    // initialise Firebase
-    val serviceAccount = FileInputStream("./resources/service-accounts/bottling-messages-firebase-adminsdk.json")
-    val firebaseOptions = FirebaseOptions.Builder()
+    logger.info("Starting up...")
+
+    // find the service account
+    val file = File(".").walk().filter { it.name == SERVICE_ACCOUNT }.first()
+    logger.debug("service account found: ${file.absolutePath}")
+
+    // initialise the Firebase SDK
+    val serviceAccount = FileInputStream(file.absolutePath)
+    val firebaseOptions = FirebaseOptions.builder()
         .setCredentials(GoogleCredentials.fromStream(serviceAccount))
         .build()
     FirebaseApp.initializeApp(firebaseOptions)
 
-    // fireup
+    // fire up the ol' server
     io.ktor.server.jetty.EngineMain.main(args)
 }
 
