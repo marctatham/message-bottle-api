@@ -12,19 +12,18 @@ import com.marctatham.service.user.UserService
 import com.marctatham.service.user.getcreate.GetCreateUserRequestMapper
 import com.marctatham.service.user.getcreate.GetCreateUserResponseMapper
 import com.marctatham.service.user.getcreate.GetCreateUserUseCase
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.auth.Authentication
-import io.ktor.auth.UserIdPrincipal
-import io.ktor.auth.authenticate
-import io.ktor.auth.jwt.jwt
-import io.ktor.http.ContentType
-import io.ktor.response.respondText
+import io.ktor.application.*
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
+import io.ktor.http.*
+import io.ktor.response.*
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import org.slf4j.LoggerFactory
 import java.io.FileInputStream
+
+val logger = LoggerFactory.getLogger(Application::class.java)
 
 val configProvider = ConfigProvider()
 val simpleJwt: SimpleJWT =
@@ -49,7 +48,6 @@ fun main(args: Array<String>) {
     // fireup
     io.ktor.server.jetty.EngineMain.main(args)
 }
-
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
@@ -87,8 +85,13 @@ fun Application.module(testing: Boolean = false) {
             call.respondText("healthy", contentType = ContentType.Text.Plain)
         }
 
+        // TODO: tidy up
         post("user") {
-            userService.getCreateUser(call)
+            try {
+                userService.getCreateUser(call)
+            } catch (throwable: Throwable) {
+                logger.error("error processing new user", throwable)
+            }
         }
 
         authenticate {
@@ -105,5 +108,9 @@ fun Application.module(testing: Boolean = false) {
             }
         }
     }
+
+
 }
+
+
 
