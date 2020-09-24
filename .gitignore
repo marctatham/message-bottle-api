@@ -36,7 +36,7 @@
 hs_err_pid*
 
 # the environment variables containing secrets
-/appengine/env_variables.yaml
+/appengine-configuration
 
 # firebase service account
 /resources/service-accounts/bottling-messages-firebase-adminsdk.json
