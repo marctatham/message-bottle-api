@@ -1,7 +1,7 @@
 # More detail regarding the app.yaml can be found here:
 # https://cloud.google.com/appengine/docs/standard/java11/config/appref
 runtime: java11
-instance_class: F1
+instance_class: B1
 
 includes:
   # environment variables are stored separately from the repository
