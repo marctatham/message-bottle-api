@@ -103,7 +103,7 @@ configure<AppEngineAppYamlExtension> {
 
         val extraFiles = arrayOf(
             "$rootDir/appengine-configuration",
-            "$rootDir/resources"
+            "$rootDir/resources/service-accounts"
         )
         setExtraFilesDirectories(extraFiles)
     }

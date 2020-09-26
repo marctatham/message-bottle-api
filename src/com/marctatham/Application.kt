@@ -1,8 +1,5 @@
 package com.marctatham
 
-import com.google.auth.oauth2.GoogleCredentials
-import com.google.firebase.FirebaseApp
-import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -22,13 +19,11 @@ import io.ktor.routing.post
 import io.ktor.routing.routing
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.File
-import java.io.FileInputStream
-
-private const val SERVICE_ACCOUNT = "bottling-messages-firebase-adminsdk.json"
 
 val logger: Logger = LoggerFactory.getLogger(Application::class.java)
 
+// TODO: let's break these dependencies out when we introduce some dependency injection
+val firebaseHandler = FirebaseHandler()
 val configProvider = ConfigProvider()
 val simpleJwt: SimpleJWT =
     SimpleJWT(
@@ -41,27 +36,23 @@ val gson: Gson = GsonBuilder()
     .setPrettyPrinting()
     .create()
 
+
+/**
+ * Entry point of the application, simply fires up the web server
+ */
 fun main(args: Array<String>) {
-    logger.info("Starting up...")
 
-    // find the service account
-    val file = File(".").walk().filter { it.name == SERVICE_ACCOUNT }.first()
-    logger.debug("service account found: ${file.absolutePath}")
-
-    // initialise the Firebase SDK
-    val serviceAccount = FileInputStream(file.absolutePath)
-    val firebaseOptions = FirebaseOptions.builder()
-        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-        .build()
-    FirebaseApp.initializeApp(firebaseOptions)
-
-    // fire up the ol' server
+    logger.info("Starting up web server...")
     io.ktor.server.jetty.EngineMain.main(args)
 }
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
+    logger.debug("initializing Application module")
+
+    logger.debug("initializing configuring ")
+    firebaseHandler.initialise()
 
     val userService = UserService(
         GetCreateUserRequestMapper(gson),
@@ -78,6 +69,7 @@ fun Application.module(testing: Boolean = false) {
         GetMessagesUseCase(messagesRepository)
     )
 
+    logger.debug("initializing authentication")
     install(Authentication) {
         jwt {
             verifier(simpleJwt.verifier)
@@ -87,6 +79,7 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
+    logger.debug("initializing routing")
     routing {
 
         // just for testing that everything is up
