@@ -108,16 +108,27 @@ fun Application.module(testing: Boolean = false) {
             }
         }
 
+        // just want to be able to flesh out the client a bit more for now
+        // for now i'm happy with the duplication between with-auth vs without
+        // will clean this up later
         get("/messages") {
             messageService.getMessages(call)
         }
 
+        post("/message") {
+            messageService.createMessage(call)
+        }
+
+        get("/message") {
+            messageService.getMessage(call)
+        }
+
         authenticate {
-            post("/message") {
+            post("/secure-message") {
                 messageService.createMessage(call)
             }
 
-            get("/message") {
+            get("/secure-message") {
                 messageService.getMessage(call)
             }
         }
