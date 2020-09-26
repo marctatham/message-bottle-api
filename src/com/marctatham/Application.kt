@@ -3,17 +3,26 @@ package com.marctatham
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.marctatham.service.message.*
+import com.marctatham.service.message.CreateMessageRequestMapper
+import com.marctatham.service.message.CreateMessageUseCase
+import com.marctatham.service.message.GetMessagesUseCase
+import com.marctatham.service.message.GetRandomMessageUseCase
+import com.marctatham.service.message.MessageService
+import com.marctatham.service.message.MessagesResponseMapper
 import com.marctatham.service.message.data.MessageRepository
 import com.marctatham.service.user.UserService
 import com.marctatham.service.user.getcreate.GetCreateUserRequestMapper
 import com.marctatham.service.user.getcreate.GetCreateUserResponseMapper
 import com.marctatham.service.user.getcreate.GetCreateUserUseCase
-import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.auth.jwt.*
-import io.ktor.http.*
-import io.ktor.response.*
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.auth.UserIdPrincipal
+import io.ktor.auth.authenticate
+import io.ktor.auth.jwt.jwt
+import io.ktor.http.ContentType
+import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
@@ -60,6 +69,7 @@ fun Application.module(testing: Boolean = false) {
         GetCreateUserUseCase(FirebaseAuth.getInstance(), simpleJwt)
     )
 
+    // todo: inject
     val messagesRepository: MessageRepository = MessageRepository()
     val messageService = MessageService(
         CreateMessageRequestMapper(gson),
@@ -98,6 +108,10 @@ fun Application.module(testing: Boolean = false) {
             }
         }
 
+        get("/messages") {
+            messageService.getMessages(call)
+        }
+
         authenticate {
             post("/message") {
                 messageService.createMessage(call)
@@ -105,10 +119,6 @@ fun Application.module(testing: Boolean = false) {
 
             get("/message") {
                 messageService.getMessage(call)
-            }
-
-            get("/messages") {
-                messageService.getMessages(call)
             }
         }
     }
