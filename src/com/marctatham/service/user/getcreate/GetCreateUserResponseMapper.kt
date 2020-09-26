@@ -7,7 +7,11 @@ class GetCreateUserResponseMapper(
 ) {
 
     fun map(userSessionEntity: UserSessionEntity): String {
-        val response = GetCreateUserResponseModel(userSessionEntity.jwtToken)
+        val response = GetCreateUserResponseModel(
+            userSessionEntity.jwtToken,
+            userSessionEntity.authProvider.providerIdentifier
+        )
+        
         return gson.toJson(response)
     }
 
