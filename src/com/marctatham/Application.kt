@@ -101,6 +101,7 @@ fun Application.module(testing: Boolean = false) {
 
         // TODO: tidy up
         post("user") {
+            logger.info("handling sign in request")
             try {
                 userService.getCreateUser(call)
             } catch (throwable: Throwable) {
@@ -112,23 +113,28 @@ fun Application.module(testing: Boolean = false) {
         // for now i'm happy with the duplication between with-auth vs without
         // will clean this up later
         get("/messages") {
+            logger.info("handling get ALL messages request")
             messageService.getMessages(call)
         }
 
         post("/message") {
+            logger.info("handling post message request")
             messageService.createMessage(call)
         }
 
         get("/message") {
+            logger.info("handling get message request")
             messageService.getMessage(call)
         }
 
         authenticate {
             post("/secure-message") {
+                logger.info("handling post secure-message request")
                 messageService.createMessage(call)
             }
 
             get("/secure-message") {
+                logger.info("handling get secure-message request")
                 messageService.getMessage(call)
             }
         }
