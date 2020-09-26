@@ -30,6 +30,6 @@ class MessageService(
         val messages = getMessagesUseCase.execute()
         val response = responseMapper.map(messages)
 
-        applicationCall.respond(HttpStatusCode.OK)
+        applicationCall.respond(HttpStatusCode.OK, response)
     }
 }
