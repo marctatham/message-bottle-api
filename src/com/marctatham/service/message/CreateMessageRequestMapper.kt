@@ -11,7 +11,7 @@ class CreateMessageRequestMapper(
             requestBody,
             CreateMessageRequestDataModel::class.java
         )
-        
+
         return MessageEntity(request.message)
     }
 }
