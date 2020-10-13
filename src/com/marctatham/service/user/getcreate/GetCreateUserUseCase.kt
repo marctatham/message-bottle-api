@@ -18,6 +18,11 @@ class GetCreateUserUseCase(
         val decodedToken: FirebaseToken = firebaseAuth.verifyIdToken(getCreateUserSession.idToken)
         logger.debug("Signing in user... \n${decodedToken.debugContents()}")
 
+        // let's try & log out the sign-in provider
+        val firebase = decodedToken.claims["firebase"] as Map<*, *>?
+        val provider = firebase?.get("sign_in_provider")
+        logger.debug("Signing in via $provider")
+
         // issue jwt token for this user valid for interaction with our backend
         val userId = decodedToken.uid
         val jwtToken = jwtIssuer.sign(userId)
